@@ -153,9 +153,9 @@ ClearVRAM:
     stx $0000       ; set $00:0000 to $0000 (assumes scratchpad ram)
     stx A1TxL       ; set source address to $xx:0000
     lda #$00
-    sta $A1Bx       ; set source bank to $00
+    sta A1Bx       ; set source bank to $00
     ldx #$FFFF
-    stx $DASxL      ; set transfer size to 64k-1 bytes
+    stx DASxL      ; set transfer size to 64k-1 bytes
     lda #$01
     sta MDMAEN      ; initiate transfer
 
@@ -177,7 +177,7 @@ ClearVRAM:
 .word start         ; RST
 .word return_int    ; IRQ
 
-.wrod 0,0           ; emulation mode vectors
+.word 0,0           ; emulation mode vectors
 .word return_int   ; COP
 .word 0
 .word return_int    ; ABORT
