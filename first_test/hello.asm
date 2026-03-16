@@ -141,7 +141,7 @@ return_int:
 ; Modifies: flags
 ;----------------------------------------------------------------------------
 
-; ClearVRAM:
+ClearVRAM:
     pha
     phx
     php
