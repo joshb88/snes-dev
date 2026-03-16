@@ -41,7 +41,10 @@ start:
     rep #$10        ; set x/y 16 bit
     sep #$20        ; set A 8 bit
 
-    jmp ClearVRAM
+    ; clear registers
+    ldx #$33
+
+    jsr ClearVRAM
 
     @loop:
     stz INIDISP,x
