@@ -14,7 +14,7 @@
 .byte 0                 ; no battery RAM
 .byte $07               ; 128k ROM
 .byte 0,0,0,0
-.word $AAAA,$5555       ;dummy checksum, compliment
+.word $451F,$BAE0       ; dummy checksum, compliment
 
 .segment "CODE"
     jmp start
@@ -87,6 +87,11 @@ start:
     inx
     cpx #(128*8)
     bne @charset_loop
+
+    ; place string tiles in background
+    ldx #START_TM_ADDR
+    stx VMADDL
+    ldx #0
 @string_loop:
     lda hello_str,x
     beq @enable_display
@@ -136,13 +141,13 @@ return_int:
 ; Modifies: flags
 ;----------------------------------------------------------------------------
 
-ClearVRAM:
+; ClearVRAM:
     pha
     phx
     php
 
-    rep #$10        ; x/y 16bit
-    sep #$20        ; a 8 bit
+    rep #$30		; mem/A = 8 bit, X/Y = 16 bit
+    sep #$20
 
     lda #$80
     sta VMAIN       ; set VRAM port to word access
@@ -165,6 +170,36 @@ ClearVRAM:
     plx
     pla
     rts
+
+; ClearVRAM:
+;     pha
+;     phx
+;     php
+
+;     REP #$30		; mem/A = 8 bit, X/Y = 16 bit
+;     SEP #$20
+
+;     LDA #$80
+;     STA $2115         ;Set VRAM port to word access
+;     LDX #$1809
+;     STX $4300         ;Set DMA mode to fixed source, WORD to $2118/9
+;     LDX #$0000
+;     STX $2116         ;Set VRAM port address to $0000
+;     STX $0000         ;Set $00:0000 to $0000 (assumes scratchpad ram)
+;     STX $4302         ;Set source address to $xx:0000
+;     LDA #$00
+;     STA $4304         ;Set source bank to $00
+;     LDX #$FFFF
+;     STX $4305         ;Set transfer size to 64k-1 bytes
+;     LDA #$01
+;     STA $420B         ;Initiate transfer
+
+;     STZ $2119         ;clear the last byte of the VRAM
+
+;     plp
+;     plx
+;     pla
+;     RTS
 
 .include "charset.asm"
 
