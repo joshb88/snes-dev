@@ -94,7 +94,7 @@ start:
     lda #$20        ; priority 1
     sta VMDATAH
     inx
-    bra @string_l0oop
+    bra @string_loop
 @enable_display:
     ; Show BG1
     lda #$01
